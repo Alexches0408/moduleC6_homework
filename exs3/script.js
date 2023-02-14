@@ -1,5 +1,6 @@
 const btn = document.querySelector('#btn_echo');
-const btngeo = document.querySelector('#btn_geo')
+const btngeo = document.querySelector('#btn_geo');
+const inputWind = document.querySelector('#input')
 const wsUrl ="wss://echo-ws-service.herokuapp.com/";
 let websocket;
 let row;
@@ -26,9 +27,22 @@ websocket.onclose = function(evt){
 // Отправки сообщения на сервер и обработка ответа
 btn.addEventListener('click', ()=>{
     message = document.querySelector('#input').value;
-    insertMessage('end', message);
-    websocket.send(message)
+    if (message){
+        insertMessage('end', message);
+        websocket.send(message)
+    }
 });
+
+inputWind.addEventListener('keydown', function(event){
+    if (event.code == 'Enter'){
+        console.log('Нажали ентер')
+        message = inputWind.value;
+    if (message){
+        insertMessage('end', message);
+        websocket.send(message)
+    }
+    }
+})
 
 
 // Создаем div с сообщением и вставлем в текст
@@ -41,10 +55,10 @@ function insertMessage(column, message){
     captin.textContent = message;
     captin.style.display = 'flex';
     captin.style.flexWrap = 'wrap';
-    captin.className = 'mess'
-    capt.append(captin)
-    document.getElementById('output').append(capt)
-
+    captin.className = 'mess';
+    capt.append(captin);
+    document.getElementById('output').append(capt);
+    document.getElementById('input').value = ""
 }
 // Блок по геолокации
 const error = () => {
@@ -93,8 +107,3 @@ function displayEcho(message){
 function displayGeo(){
     console.log('геолокация')
 }
-
-
-
-
-
