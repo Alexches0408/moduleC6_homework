@@ -35,7 +35,6 @@ btn.addEventListener('click', ()=>{
 
 inputWind.addEventListener('keydown', function(event){
     if (event.code == 'Enter'){
-        console.log('Нажали ентер')
         message = inputWind.value;
     if (message){
         insertMessage('end', message);
@@ -107,3 +106,8 @@ function displayEcho(message){
 function displayGeo(){
     console.log('геолокация')
 }
+
+
+
+
+
