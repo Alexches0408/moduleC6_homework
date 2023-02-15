@@ -13,7 +13,7 @@ websocket = new WebSocket(wsUrl);
     };
 
 websocket.onmessage = function(evt){
-    insertMessage('start', evt.data)
+    insertMessage('start', evt.data, 'outmess')
 
 };
 
@@ -28,7 +28,7 @@ websocket.onclose = function(evt){
 btn.addEventListener('click', ()=>{
     message = document.querySelector('#input').value;
     if (message){
-        insertMessage('end', message);
+        insertMessage('end', message, 'ourmess');
         websocket.send(message)
     }
 });
@@ -37,7 +37,7 @@ inputWind.addEventListener('keydown', function(event){
     if (event.code == 'Enter'){
         message = inputWind.value;
     if (message){
-        insertMessage('end', message);
+        insertMessage('end', message, 'ourmess');
         websocket.send(message)
     }
     }
@@ -45,7 +45,7 @@ inputWind.addEventListener('keydown', function(event){
 
 
 // Создаем div с сообщением и вставлем в текст
-function insertMessage(column, message){
+function insertMessage(column, message, clas){
     let capt = document.createElement('div');
     capt.width = 500;
     capt.style.display = 'flex';
@@ -54,10 +54,11 @@ function insertMessage(column, message){
     captin.textContent = message;
     captin.style.display = 'flex';
     captin.style.flexWrap = 'wrap';
-    captin.className = 'mess';
+    captin.className = clas;
     capt.append(captin);
-    document.getElementById('output').append(capt);
+    document.getElementById('wind').insertAdjacentElement("beforeend", capt);
     document.getElementById('input').value = ""
+    document.getElementById('wind').style.bottom = '0px'
 }
 // Блок по геолокации
 const error = () => {
@@ -65,7 +66,7 @@ const error = () => {
 }
 
 const success = (position) => {
-    insertMessage('end', 'Гео-локация')
+    insertMessage('end', 'Гео-локация', 'ourmess')
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
     mapLink = document.createElement('a');
@@ -74,7 +75,7 @@ const success = (position) => {
     geocapt = document.createElement('div');
     geocapt.className = 'geo';
     geocapt.append(mapLink)
-    document.getElementById('output').append(geocapt);
+    document.getElementById('wind').insertAdjacentElement("beforeend", geocapt);
 }
 
 btngeo.addEventListener('click', ()=>{
@@ -108,6 +109,24 @@ function displayGeo(){
 }
 
 
-
+// Добавлям прокрутку чата
+document.getElementById('wind_vision').onwheel = function (event) {
+    var line = event.deltaY;
+    bottom = Number(document.getElementById('wind').style.bottom.slice(0, -2)) + line
+    document.getElementById('wind').style.bottom = bottom + 'px';
+    if(Number(document.getElementById('wind').style.bottom.slice(0, -2)) > 0){
+        document.getElementById('wind').style.bottom = 0 + 'px';
+        console.log('1');
+    }
+    if(Number(document.getElementById('wind').style.bottom.slice(0, -2)) < (450  - document.getElementById('wind').clientHeight)){
+            document.getElementById('wind').style.bottom = (450 - document.getElementById('wind').clientHeight) + 'px';
+            console.log('2');
+    }
+    if (Number(document.getElementById('wind').clientHeight) < 450){
+        document.getElementById('wind').style.bottom = 0 + 'px';
+        console.log('3');
+    }
+    return false;
+}
 
 
